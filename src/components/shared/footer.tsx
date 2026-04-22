@@ -61,6 +61,109 @@ export function Footer() {
   const primaryTask = enabledTasks.find((task) => task.key === recipe.primaryTask) || enabledTasks[0]
 
   if (recipe.footer === 'minimal-footer') {
+    if (recipe.homeLayout === 'classified-home') {
+      return (
+        <footer className="bg-[#0A0A0A] text-white">
+          <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+            <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr_0.9fr_1.1fr]">
+              <div>
+                <Link href="/" className="inline-flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-1">
+                    <img src="/favicon.png?v=20260422" alt="" width="44" height="44" className="h-full w-full object-contain" />
+                  </div>
+                  <span className="font-sans text-lg font-bold">{SITE_CONFIG.name}</span>
+                </Link>
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">{SITE_CONFIG.description}</p>
+                <div className="mt-6 flex gap-3">
+                  {socialLinks.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full border border-white/15 bg-white/5 p-2.5 text-white/80 transition hover:bg-white/10 hover:text-white"
+                    >
+                      <item.icon className="h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">Resources</h3>
+                <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+                  <li>
+                    <Link href="/terms" className="hover:text-white">
+                      Terms of Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/privacy" className="hover:text-white">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/cookies" className="hover:text-white">
+                      Cookies
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">Browse</h3>
+                <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+                  <li>
+                    <Link href="/classifieds" className="hover:text-white">
+                      Top categories
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/search" className="hover:text-white">
+                      Search ads
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/create/classified" className="hover:text-white">
+                      Post an ad
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">Support</h3>
+                <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+                  <li>
+                    <Link href="/help" className="hover:text-white">
+                      Help center
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/help" className="hover:text-white">
+                      Safety tips
+                    </Link>
+                  </li>
+                </ul>
+                <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <input
+                    type="email"
+                    placeholder="Email for updates"
+                    className="h-11 w-full rounded-full border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/40 outline-none ring-[#F06529]/40 focus:ring-2"
+                  />
+                  <button
+                    type="button"
+                    className="h-11 shrink-0 rounded-full bg-[#F06529] px-5 text-sm font-semibold text-white transition hover:bg-[#e55a24]"
+                  >
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="mt-12 border-t border-white/10 pt-6 text-center text-sm text-white/45">
+              &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
+            </div>
+          </div>
+        </footer>
+      )
+    }
     return (
       <footer className="border-t border-[#d7deca] bg-[#f4f6ef] text-[#1f2617]">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
@@ -88,7 +191,7 @@ export function Footer() {
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                  <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
@@ -180,7 +283,7 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-3">
               <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+                <img src="/favicon.png?v=20260422" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>

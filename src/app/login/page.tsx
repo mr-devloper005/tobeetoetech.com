@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { Bookmark, Building2, FileText, Image as ImageIcon, Sparkles } from 'lucide-react'
+import { Bookmark, Building2, FileText, Image as ImageIcon, Tag } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
+import { ClassifiedsLoginForm, ClassifiedsLoginLinks } from '@/components/auth/classifieds-login-form'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { getProductKind } from '@/design/factory/get-product-kind'
 import { LOGIN_PAGE_OVERRIDE_ENABLED, LoginPageOverride } from '@/overrides/login-page'
@@ -9,14 +10,15 @@ import { LOGIN_PAGE_OVERRIDE_ENABLED, LoginPageOverride } from '@/overrides/logi
 function getLoginConfig(kind: ReturnType<typeof getProductKind>) {
   if (kind === 'directory') {
     return {
-      shell: 'bg-[#f8fbff] text-slate-950',
-      panel: 'border border-slate-200 bg-white',
-      side: 'border border-slate-200 bg-slate-50',
-      muted: 'text-slate-600',
-      action: 'bg-slate-950 text-white hover:bg-slate-800',
-      icon: Building2,
-      title: 'Access your business dashboard',
-      body: 'Manage listings, verification details, contact info, and local discovery surfaces from one place.',
+      shell: 'bg-[#f4f6fb] text-[#0f1a45]',
+      panel: 'border border-[#1A2B6D]/12 bg-white shadow-[0_24px_64px_rgba(26,43,109,0.08)]',
+      side: 'border border-[#1A2B6D]/10 bg-[#1A2B6D] text-white',
+      muted: 'text-white/75',
+      action:
+        'inline-flex h-12 w-full items-center justify-center rounded-full bg-[#F06529] px-6 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(240,101,41,0.35)] transition hover:bg-[#e55a24] disabled:pointer-events-none disabled:opacity-60',
+      icon: Tag,
+      title: 'Sign in to post and manage ads',
+      body: 'Access saved drafts, edit live classifieds, and keep your contact details up to date in one place.',
     }
   }
   if (kind === 'editorial') {
@@ -82,19 +84,31 @@ export default function LoginPage() {
           </div>
 
           <div className={`rounded-[2rem] p-8 ${config.panel}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Welcome back</p>
-            <form className="mt-6 grid gap-4">
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Password" type="password" />
-              <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${config.action}`}>Sign in</button>
-            </form>
-            <div className={`mt-6 flex items-center justify-between text-sm ${config.muted}`}>
-              <Link href="/forgot-password" className="hover:underline">Forgot password?</Link>
-              <Link href="/register" className="inline-flex items-center gap-2 font-semibold hover:underline">
-                <Sparkles className="h-4 w-4" />
-                Create account
-              </Link>
-            </div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#1A2B6D]/70">Welcome back</p>
+            {productKind === 'directory' ? (
+              <>
+                <ClassifiedsLoginForm submitClassName={config.action} />
+                <ClassifiedsLoginLinks mutedClassName="text-slate-600" />
+              </>
+            ) : (
+              <>
+                <form className="mt-6 grid gap-4">
+                  <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />
+                  <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Password" type="password" />
+                  <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${config.action}`}>
+                    Sign in
+                  </button>
+                </form>
+                <div className={`mt-6 flex items-center justify-between text-sm ${config.muted}`}>
+                  <Link href="/forgot-password" className="hover:underline">
+                    Forgot password?
+                  </Link>
+                  <Link href="/register" className="inline-flex items-center gap-2 font-semibold hover:underline">
+                    Create account
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </section>
       </main>

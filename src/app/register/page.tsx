@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Bookmark, Building2, FileText, Image as ImageIcon, Sparkles } from 'lucide-react'
+import { Bookmark, Building2, FileText, Image as ImageIcon, Sparkles, Tag } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
 import { getFactoryState } from '@/design/factory/get-factory-state'
@@ -9,14 +9,15 @@ import { REGISTER_PAGE_OVERRIDE_ENABLED, RegisterPageOverride } from '@/override
 function getRegisterConfig(kind: ReturnType<typeof getProductKind>) {
   if (kind === 'directory') {
     return {
-      shell: 'bg-[#f8fbff] text-slate-950',
-      panel: 'border border-slate-200 bg-white',
-      side: 'border border-slate-200 bg-slate-50',
-      muted: 'text-slate-600',
-      action: 'bg-slate-950 text-white hover:bg-slate-800',
-      icon: Building2,
-      title: 'Create a business-ready account',
-      body: 'List services, manage locations, and activate trust signals with a proper directory workflow.',
+      shell: 'bg-[#f4f6fb] text-[#0f1a45]',
+      panel: 'border border-[#1A2B6D]/12 bg-white shadow-[0_24px_64px_rgba(26,43,109,0.08)]',
+      side: 'border border-[#1A2B6D]/10 bg-[#1A2B6D] text-white',
+      muted: 'text-white/75',
+      action:
+        'inline-flex h-12 w-full items-center justify-center rounded-full bg-[#F06529] px-6 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(240,101,41,0.35)] transition hover:bg-[#e55a24]',
+      icon: Tag,
+      title: 'Create your seller profile in minutes',
+      body: 'Save drafts, upload crisp photos, and publish classifieds with the same polished experience buyers see on the homepage.',
     }
   }
   if (kind === 'editorial') {
@@ -63,6 +64,7 @@ export default function RegisterPage() {
   const { recipe } = getFactoryState()
   const productKind = getProductKind(recipe)
   const config = getRegisterConfig(productKind)
+  const isDirectory = productKind === 'directory'
   const Icon = config.icon
 
   return (
@@ -75,14 +77,31 @@ export default function RegisterPage() {
             <h1 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{config.title}</h1>
             <p className={`mt-5 text-sm leading-8 ${config.muted}`}>{config.body}</p>
             <div className="mt-8 grid gap-4">
-              {['Different onboarding per product family', 'No repeated one-size-fits-all shell', 'Profile, publishing, and discovery aligned'].map((item) => (
-                <div key={item} className="rounded-[1.5rem] border border-current/10 px-4 py-4 text-sm">{item}</div>
+              {(isDirectory
+                ? [
+                    'One account for every ad you publish locally',
+                    'Orange CTAs match the home experience end-to-end',
+                    'Upgrade paths when you need more photos or time live',
+                  ]
+                : [
+                    'Different onboarding per product family',
+                    'No repeated one-size-fits-all shell',
+                    'Profile, publishing, and discovery aligned',
+                  ]
+              ).map((item) => (
+                <div key={item} className="rounded-[1.5rem] border border-current/10 px-4 py-4 text-sm">
+                  {item}
+                </div>
               ))}
             </div>
           </div>
 
           <div className={`rounded-[2rem] p-8 ${config.panel}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Create account</p>
+            <p
+              className={`text-xs font-semibold uppercase tracking-[0.24em] ${isDirectory ? 'text-[#1A2B6D]/70' : 'opacity-70'}`}
+            >
+              Create account
+            </p>
             <form className="mt-6 grid gap-4">
               <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Full name" />
               <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />

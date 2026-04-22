@@ -60,6 +60,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           })
       setUser(nextUser)
       saveToStorage(storageKeys.user, nextUser)
+      const token =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `session_${Date.now()}`
+      saveToStorage(storageKeys.authToken, token)
     }
     setIsLoading(false)
   }, [buildUser])
@@ -68,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem(storageKeys.user)
+      window.localStorage.removeItem(storageKeys.authToken)
     }
   }, [])
 
@@ -84,6 +90,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
       setUser(nextUser)
       saveToStorage(storageKeys.user, nextUser)
+      const token =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `session_${Date.now()}`
+      saveToStorage(storageKeys.authToken, token)
     }
     setIsLoading(false)
   }, [buildUser])
