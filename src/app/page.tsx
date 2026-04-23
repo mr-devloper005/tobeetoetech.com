@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Bookmark, Building2, Compass, FileText, Globe2, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Tag, User } from 'lucide-react'
+import { ArrowRight, Bookmark, Briefcase, Building2, Car, CheckCircle2, FileText, Home, Image as ImageIcon, Laptop, LayoutGrid, Tag, User } from 'lucide-react'
 import { ContentImage } from '@/components/shared/content-image'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
@@ -63,42 +63,6 @@ function getPostImage(post?: SitePost | null) {
   return mediaUrl || contentImage || logo || '/placeholder.svg?height=900&width=1400'
 }
 
-function getPostMeta(post?: SitePost | null) {
-  if (!post || typeof post.content !== 'object' || !post.content) return { location: '', category: '' }
-  const content = post.content as Record<string, unknown>
-  return {
-    location: typeof content.address === 'string' ? content.address : typeof content.location === 'string' ? content.location : '',
-    category: typeof content.category === 'string' ? content.category : typeof post.tags?.[0] === 'string' ? post.tags[0] : '',
-  }
-}
-
-function getDirectoryTone(brandPack: string) {
-  if (brandPack === 'market-utility') {
-    return {
-      shell: 'bg-[#f5f7f1] text-[#1f2617]',
-      hero: 'bg-[linear-gradient(180deg,#eef4e4_0%,#f8faf4_100%)]',
-      panel: 'border border-[#d5ddc8] bg-white shadow-[0_24px_64px_rgba(64,76,34,0.08)]',
-      soft: 'border border-[#d5ddc8] bg-[#eff3e7]',
-      muted: 'text-[#5b664c]',
-      title: 'text-[#1f2617]',
-      badge: 'bg-[#1f2617] text-[#edf5dc]',
-      action: 'bg-[#1f2617] text-[#edf5dc] hover:bg-[#2f3a24]',
-      actionAlt: 'border border-[#d5ddc8] bg-white text-[#1f2617] hover:bg-[#eef3e7]',
-    }
-  }
-  return {
-    shell: 'bg-[#f8fbff] text-slate-950',
-    hero: 'bg-[linear-gradient(180deg,#eef6ff_0%,#ffffff_100%)]',
-    panel: 'border border-slate-200 bg-white shadow-[0_24px_64px_rgba(15,23,42,0.08)]',
-    soft: 'border border-slate-200 bg-slate-50',
-    muted: 'text-slate-600',
-    title: 'text-slate-950',
-    badge: 'bg-slate-950 text-white',
-    action: 'bg-slate-950 text-white hover:bg-slate-800',
-    actionAlt: 'border border-slate-200 bg-white text-slate-950 hover:bg-slate-100',
-  }
-}
-
 function getEditorialTone() {
   return {
     shell: 'bg-[#fbf6ee] text-[#241711]',
@@ -138,7 +102,25 @@ function getCurationTone() {
   }
 }
 
-function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPosts, profilePosts, brandPack }: {
+const browseCategories = [
+  { label: 'Mobiles', href: '/classifieds?category=mobiles' },
+  { label: 'Furniture', href: '/classifieds?category=furniture' },
+  { label: 'Appliances', href: '/classifieds?category=appliances' },
+  { label: 'Vehicles', href: '/classifieds?category=vehicles' },
+  { label: 'Jobs', href: '/classifieds?category=jobs' },
+  { label: 'Property', href: '/classifieds?category=property' },
+  { label: 'Services', href: '/classifieds?category=services' },
+  { label: 'Electronics', href: '/classifieds?category=electronics' },
+] as const
+
+const heroCategories = [
+  { title: 'Electronics', blurb: 'Phones, laptops, and gadgets nearby.', href: '/classifieds?category=electronics', icon: Laptop, cta: 'Browse electronics' },
+  { title: 'Vehicles', blurb: 'Cars, bikes, and parts from local sellers.', href: '/classifieds?category=vehicles', icon: Car, cta: 'Browse vehicles' },
+  { title: 'Property', blurb: 'Rentals and sales across your area.', href: '/classifieds?category=property', icon: Home, cta: 'Browse property' },
+  { title: 'Jobs', blurb: 'Roles, gigs, and shifts worth applying to.', href: '/classifieds?category=jobs', icon: Briefcase, cta: 'Browse jobs' },
+] as const
+
+function DirectoryHome({ primaryTask, enabledTasks: _enabledTasks, listingPosts, classifiedPosts, profilePosts: _profilePosts, brandPack: _brandPack }: {
   primaryTask?: EnabledTask
   enabledTasks: EnabledTask[]
   listingPosts: SitePost[]
@@ -146,121 +128,225 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
   profilePosts: SitePost[]
   brandPack: string
 }) {
-  const tone = getDirectoryTone(brandPack)
-  const featuredListings = (listingPosts.length ? listingPosts : classifiedPosts).slice(0, 3)
+  const ads = (listingPosts.length ? listingPosts : classifiedPosts).slice(0, 12)
   const featuredTaskKey: TaskKey = listingPosts.length ? 'listing' : 'classified'
-  const quickRoutes = enabledTasks.slice(0, 4)
+  const spotlight = ads[0]
+  const recent = ads.slice(0, 6)
 
   return (
-    <main>
-      <section className={tone.hero}>
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
-          <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+    <main className="bg-white text-[#0f1a45]">
+      <section className="relative overflow-hidden bg-[#1A2B6D] text-white">
+        <div className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-[#F06529]/25 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70">Trusted local classifieds</p>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
-              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tone.badge}`}>
-                <Compass className="h-3.5 w-3.5" />
-                Local discovery product
-              </span>
-              <h1 className={`mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl ${tone.title}`}>
-                Search businesses, compare options, and act fast without digging through generic feeds.
+              <h1 className="max-w-3xl font-sans text-4xl font-bold leading-[1.08] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                <span className="text-transparent" style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.95)' }}>
+                  Find
+                </span>{' '}
+                <span className="text-white">everything you need</span>{' '}
+                <span className="text-white/90">in your city.</span>
               </h1>
-              <p className={`mt-6 max-w-2xl text-base leading-8 ${tone.muted}`}>{SITE_CONFIG.description}</p>
-
-              <div className={`mt-8 grid gap-3 rounded-[2rem] p-4 ${tone.panel} md:grid-cols-[1.25fr_0.8fr_auto]`}>
-                <div className="rounded-full bg-black/5 px-4 py-3 text-sm">What do you need today?</div>
-                <div className="rounded-full bg-black/5 px-4 py-3 text-sm">Choose area or city</div>
-                <Link href={primaryTask?.route || '/listings'} className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
-                  Browse now
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80">{SITE_CONFIG.description}</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/search"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#F06529] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_40px_rgba(240,101,41,0.45)] transition hover:bg-[#e55a24]"
+                >
+                  Search ads
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-              </div>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {[
-                  ['Verified businesses', `${featuredListings.length || 3}+ highlighted surfaces`],
-                  ['Fast scan rhythm', 'More utility, less filler'],
-                  ['Action first', 'Call, visit, shortlist, compare'],
-                ].map(([label, value]) => (
-                  <div key={label} className={`rounded-[1.4rem] p-4 ${tone.soft}`}>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] opacity-70">{label}</p>
-                    <p className="mt-2 text-lg font-semibold">{value}</p>
-                  </div>
-                ))}
+                <Link
+                  href={primaryTask?.route || '/classifieds'}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15"
+                >
+                  Browse categories
+                </Link>
               </div>
             </div>
+            <Link
+              href="/create/classified"
+              className="hidden items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-6 py-5 text-center text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/15 lg:inline-flex"
+            >
+              Post a free ad in minutes — photos, price, and location.
+            </Link>
+          </div>
 
-            <div className="grid gap-4">
-              <div className={`rounded-[2rem] p-6 ${tone.panel}`}>
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] opacity-70">Primary lane</p>
-                    <h2 className="mt-2 text-3xl font-semibold">{primaryTask?.label || 'Listings'}</h2>
-                  </div>
-                  <ShieldCheck className="h-6 w-6" />
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {heroCategories.map((cat) => (
+              <div
+                key={cat.title}
+                className="flex flex-col rounded-[1.25rem] border border-white/15 bg-white/[0.07] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.12)] backdrop-blur-sm"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
+                  <cat.icon className="h-6 w-6 text-white" />
                 </div>
-                <p className={`mt-4 text-sm leading-7 ${tone.muted}`}>{primaryTask?.description || 'Structured discovery for services, offers, and business surfaces.'}</p>
+                <h2 className="mt-4 font-sans text-lg font-semibold tracking-tight">{cat.title}</h2>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-white/75">{cat.blurb}</p>
+                <Link
+                  href={cat.href}
+                  className="mt-5 inline-flex w-full items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-[#F06529] hover:border-[#F06529]"
+                >
+                  {cat.cta}
+                </Link>
               </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                {quickRoutes.map((task) => {
-                  const Icon = taskIcons[task.key as TaskKey] || LayoutGrid
-                  return (
-                    <Link key={task.key} href={task.route} className={`rounded-[1.6rem] p-5 ${tone.soft}`}>
-                      <Icon className="h-5 w-5" />
-                      <h3 className="mt-4 text-lg font-semibold">{task.label}</h3>
-                      <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{task.description}</p>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between gap-4 border-b border-border pb-6">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:items-start">
+          <aside className="rounded-[1.25rem] border border-[#1A2B6D]/10 bg-[#f6f8fc] p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1A2B6D]/60">Categories</p>
+            <nav className="mt-4 space-y-1">
+              {browseCategories.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#0f1a45] transition hover:bg-white hover:text-[#1A2B6D]"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <Link href="/classifieds" className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-[#1A2B6D] px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-[#14245a]">
+              View all
+            </Link>
+          </aside>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">Featured businesses</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Strong listings with clearer trust cues.</h2>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#1A2B6D]/55">Featured</p>
+            <h2 className="mt-2 max-w-2xl font-sans text-3xl font-bold tracking-[-0.03em] text-[#0f1a45]">Ad of the day — hand-picked for visibility and fair pricing.</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
+              Fresh classifieds from people nearby. Jump in, message sellers safely, and close deals without leaving the platform rhythm you already know.
+            </p>
+            {spotlight ? (
+              <Link
+                href={getTaskHref(featuredTaskKey, spotlight.slug)}
+                className="mt-8 block overflow-hidden rounded-[1.35rem] border border-[#1A2B6D]/10 bg-white shadow-[0_28px_70px_rgba(26,43,109,0.1)]"
+              >
+                <div className="relative aspect-[21/9] min-h-[200px] w-full sm:aspect-[2.4/1]">
+                  <ContentImage src={getPostImage(spotlight)} alt={spotlight.title} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f1a45]/85 via-transparent to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/75">Spotlight listing</p>
+                    <h3 className="mt-2 font-sans text-2xl font-bold text-white sm:text-3xl">{spotlight.title}</h3>
+                    <p className="mt-2 max-w-xl text-sm text-white/85">{spotlight.summary || 'Open the ad for full details, photos, and seller contact preferences.'}</p>
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#F06529]">
+                      View this ad
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ) : (
+              <div className="mt-8 flex min-h-[220px] items-center justify-center rounded-[1.35rem] border border-dashed border-[#1A2B6D]/20 bg-[#f6f8fc] p-8 text-center text-sm text-slate-600">
+                New featured ads will appear here as soon as listings go live.
+              </div>
+            )}
           </div>
-          <Link href="/listings" className="text-sm font-semibold text-primary hover:opacity-80">Open listings</Link>
         </div>
-        <div className="mt-8 grid gap-6 lg:grid-cols-3">
-          {featuredListings.map((post) => (
-            <TaskPostCard key={post.id} post={post} href={getTaskHref(featuredTaskKey, post.slug)} taskKey={featuredTaskKey} />
+      </section>
+
+      <section className="border-y border-[#1A2B6D]/8 bg-[#f6f8fc]">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#1A2B6D]/55">Recent listings</p>
+              <h2 className="mt-2 font-sans text-3xl font-bold tracking-[-0.03em] text-[#0f1a45]">Trusted sellers, clear photos, straight descriptions.</h2>
+            </div>
+            <Link href="/classifieds" className="text-sm font-semibold text-[#F06529] hover:underline">
+              See all classifieds
+            </Link>
+          </div>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {recent.length ? (
+              recent.map((post) => <TaskPostCard key={post.id} post={post} href={getTaskHref(featuredTaskKey, post.slug)} taskKey={featuredTaskKey} />)
+            ) : (
+              <p className="text-sm text-slate-600">Listings will show up here once your catalog syncs.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-6 sm:grid-cols-3">
+          {[
+            { value: '50k+', label: 'Active ads' },
+            { value: '10k+', label: 'Daily visitors' },
+            { value: '100%', label: 'Seller transparency tools' },
+          ].map((stat) => (
+            <div key={stat.label} className="rounded-[1.25rem] border border-[#1A2B6D]/10 bg-white p-6 text-center shadow-sm">
+              <p className="font-sans text-3xl font-bold text-[#1A2B6D]">{stat.value}</p>
+              <p className="mt-2 text-sm font-medium text-slate-600">{stat.label}</p>
+            </div>
           ))}
         </div>
       </section>
 
-      <section className={`${tone.shell}`}>
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
-          <div className={`rounded-[2rem] p-7 ${tone.panel}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">What makes this different</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Built like a business directory, not a recolored content site.</h2>
-            <ul className={`mt-6 space-y-3 text-sm leading-7 ${tone.muted}`}>
-              <li>Search-first hero instead of a magazine headline.</li>
-              <li>Action-oriented listing cards with trust metadata.</li>
-              <li>Support lanes for offers, businesses, and profiles.</li>
-            </ul>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {(profilePosts.length ? profilePosts : classifiedPosts).slice(0, 4).map((post) => {
-              const meta = getPostMeta(post)
-              const taskKey = resolveTaskKey(post.task, profilePosts.length ? 'profile' : 'classified')
-              return (
-                <Link key={post.id} href={getTaskHref(taskKey, post.slug)} className={`overflow-hidden rounded-[1.8rem] ${tone.panel}`}>
-                  <div className="relative h-44 overflow-hidden">
-                    <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
-                  </div>
-                  <div className="p-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || post.task || 'Profile'}</p>
-                    <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
-                    <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Quick access to local information and related surfaces.'}</p>
-                  </div>
+      <section className="bg-white pb-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-[#1A2B6D]/55">Plans</p>
+          <h2 className="mx-auto mt-2 max-w-2xl text-center font-sans text-3xl font-bold tracking-[-0.03em] text-[#0f1a45]">Pick how long you want your ad to shine.</h2>
+          <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+            {[
+              {
+                name: 'Basic',
+                price: 'Free',
+                blurb: 'Great for quick sales and one-off items.',
+                features: ['7-day live window', 'Up to 2 photos', 'Standard placement'],
+                cta: 'Start free',
+                href: '/create/classified',
+                highlight: false,
+              },
+              {
+                name: 'Premium',
+                price: 'Paid',
+                blurb: 'More exposure for higher-intent buyers.',
+                features: ['30-day live window', 'Up to 10 photos', 'Featured tag on browse'],
+                cta: 'Go premium',
+                href: '/create/classified',
+                highlight: true,
+              },
+              {
+                name: 'Business',
+                price: 'Paid',
+                blurb: 'For shops posting inventory at scale.',
+                features: ['Unlimited active ads', 'Verified badge', 'Priority support'],
+                cta: 'Talk to us',
+                href: '/help',
+                highlight: false,
+              },
+            ].map((plan) => (
+              <div
+                key={plan.name}
+                className={`relative flex flex-col rounded-[1.25rem] border p-7 ${
+                  plan.highlight ? 'border-[#1A2B6D] bg-[#1A2B6D] text-white shadow-[0_28px_70px_rgba(26,43,109,0.25)]' : 'border-[#1A2B6D]/10 bg-[#f6f8fc]'
+                }`}
+              >
+                <h3 className="font-sans text-xl font-bold">{plan.name}</h3>
+                <p className={`mt-2 text-sm ${plan.highlight ? 'text-white/80' : 'text-slate-600'}`}>{plan.blurb}</p>
+                <p className="mt-4 font-sans text-2xl font-bold text-[#F06529]">{plan.price}</p>
+                <ul className="mt-6 flex-1 space-y-3 text-sm">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <CheckCircle2 className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlight ? 'text-[#F06529]' : 'text-[#1A2B6D]'}`} />
+                      <span className={plan.highlight ? 'text-white/90' : 'text-[#0f1a45]'}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={plan.href}
+                  className={`mt-8 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition ${
+                    plan.highlight ? 'bg-[#F06529] text-white hover:bg-[#e55a24]' : 'bg-[#F06529] text-white hover:bg-[#e55a24]'
+                  }`}
+                >
+                  {plan.cta}
                 </Link>
-              )
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>
