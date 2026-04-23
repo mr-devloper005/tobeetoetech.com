@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Tag, User } from 'lucide-react'
+import { ArrowRight, Building2, CheckCircle2, FileText, Image as ImageIcon, LayoutGrid, Search, Shield, Sparkles, Tag, User } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
 import { TaskListClient } from '@/components/tasks/task-list-client'
@@ -57,11 +57,22 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   }))
   const { recipe } = getFactoryState()
   const layoutKey = recipe.taskLayouts[task as keyof typeof recipe.taskLayouts] || `${task}-${task === 'listing' ? 'directory' : 'editorial'}`
-  const shellClass = variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
+  const isClassifiedSurface = task === 'classified'
+  const shellClass = isClassifiedSurface
+    ? 'bg-[linear-gradient(180deg,#ffffff_0%,#f4f6fb_48%,#eef1f8_100%)] text-[#0f1a45]'
+    : variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
   const Icon = taskIcons[task] || LayoutGrid
 
   const isDark = ['image-masonry', 'image-portfolio', 'profile-creator'].includes(layoutKey)
-  const ui = isDark
+  const ui = isClassifiedSurface
+    ? {
+        muted: 'text-slate-600',
+        panel: 'border border-[#1A2B6D]/10 bg-white shadow-[0_24px_60px_rgba(26,43,109,0.08)]',
+        soft: 'border border-[#1A2B6D]/10 bg-[#f6f8fc]',
+        input: 'border border-[#1A2B6D]/12 bg-white text-[#0f1a45] focus:ring-[#F06529]/30',
+        button: 'bg-[#F06529] text-white hover:bg-[#e55a24]',
+      }
+    : isDark
     ? {
         muted: 'text-slate-300',
         panel: 'border border-white/10 bg-white/6',
@@ -199,18 +210,80 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'classified-bulletin' || layoutKey === 'classified-market' ? (
-          <section className="mb-12 grid gap-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-            <div className={`rounded-[1.8rem] p-6 ${ui.panel}`}>
-              <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
-              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-foreground">Fast-moving notices, offers, and responses in a compact board format.</h1>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {['Quick to scan', 'Shorter response path', 'Clearer urgency cues'].map((item) => (
-                <div key={item} className={`rounded-[1.5rem] p-5 ${ui.soft}`}>
-                  <p className="text-sm font-semibold">{item}</p>
+        {isClassifiedSurface ? (
+          <section className="mb-14 space-y-8">
+            <div className="relative overflow-hidden rounded-[1.5rem] bg-[#1A2B6D] p-8 text-white shadow-[0_28px_70px_rgba(26,43,109,0.35)] sm:p-10">
+              <div className="pointer-events-none absolute -right-16 top-0 h-48 w-48 rounded-full bg-[#F06529]/25 blur-3xl" />
+              <div className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-white/65">{taskConfig?.label || 'Classifieds'}</p>
+                  <h1 className="mt-4 max-w-3xl font-sans text-3xl font-bold leading-tight tracking-[-0.03em] sm:text-4xl lg:text-[2.65rem]">
+                    Fresh local ads, tuned for quick reads and faster replies.
+                  </h1>
+                  <p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
+                    {taskConfig?.description ||
+                      'Browse trusted categories, filter down to what matters, and jump into a listing without losing context.'}
+                  </p>
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link
+                      href="/search"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#F06529] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(240,101,41,0.45)] transition hover:bg-[#e55a24]"
+                    >
+                      <Search className="h-4 w-4" />
+                      Open search
+                    </Link>
+                    <Link
+                      href="/create/classified"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15"
+                    >
+                      Post an ad
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
-              ))}
+                <form
+                  className="relative rounded-[1.25rem] border border-white/20 bg-white/10 p-5 backdrop-blur-sm sm:p-6"
+                  action={taskConfig?.route || '#'}
+                >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">Filters</p>
+                  <label className="mt-4 block">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-white/70">Category</span>
+                    <select
+                      name="category"
+                      defaultValue={normalizedCategory}
+                      className="mt-2 h-11 w-full rounded-xl border border-white/25 bg-white px-3 text-sm text-[#0f1a45]"
+                    >
+                      <option value="all">All categories</option>
+                      {CATEGORY_OPTIONS.map((item) => (
+                        <option key={item.slug} value={item.slug}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <button type="submit" className={`mt-4 h-11 w-full rounded-xl text-sm font-semibold ${ui.button}`}>
+                    Apply filters
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                { title: 'Photo-first cards', body: 'Hero imagery, crisp price cues, and seller context stay above the fold.', icon: Sparkles },
+                { title: 'Safety nudges', body: 'Meet in public, verify high-value items, and flag anything suspicious in one tap.', icon: Shield },
+                { title: 'Always current', body: 'Newest ads float up automatically so repeat visitors always see momentum.', icon: CheckCircle2 },
+              ].map((item) => {
+                const FeatureIcon = item.icon
+                return (
+                  <div key={item.title} className={`flex flex-col gap-3 rounded-[1.25rem] p-6 ${ui.soft}`}>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1A2B6D]/8 text-[#1A2B6D]">
+                      <FeatureIcon className="h-5 w-5" />
+                    </div>
+                    <p className="font-sans text-lg font-semibold text-[#0f1a45]">{item.title}</p>
+                    <p className="text-sm leading-relaxed text-slate-600">{item.body}</p>
+                  </div>
+                )
+              })}
             </div>
           </section>
         ) : null}

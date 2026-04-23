@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Save } from "lucide-react";
 import { NavbarShell } from "@/components/shared/navbar-shell";
+import { Footer } from "@/components/shared/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -270,26 +271,72 @@ export default function CreateTaskPage() {
     router.push(`/local/${taskKey}/${post.slug}`);
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <NavbarShell />
-      <main className="mx-auto max-w-4xl px-4 py-12">
-        <div className="mb-8 flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">{formConfig.title}</h1>
-            <p className="text-sm text-muted-foreground">{formConfig.description}</p>
-          </div>
-        </div>
+  const isClassifiedCreate = taskKey === "classified";
 
-        <div className="rounded-3xl border border-border bg-card p-8 shadow-sm">
+  return (
+    <div
+      className={
+        isClassifiedCreate
+          ? "min-h-screen bg-[linear-gradient(180deg,#ffffff_0%,#f4f6fb_100%)] text-[#0f1a45]"
+          : "min-h-screen bg-background"
+      }
+    >
+      <NavbarShell />
+      {isClassifiedCreate ? (
+        <section className="relative overflow-hidden bg-[#1A2B6D] text-white">
+          <div className="pointer-events-none absolute -right-20 top-0 h-48 w-48 rounded-full bg-[#F06529]/22 blur-3xl" />
+          <div className="relative mx-auto max-w-4xl px-4 py-10 sm:px-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/65">Compose</p>
+            <h1 className="mt-3 font-sans text-3xl font-bold tracking-tight sm:text-4xl">{formConfig.title}</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/80">{formConfig.description}</p>
+          </div>
+        </section>
+      ) : null}
+      <main className={`mx-auto max-w-4xl px-4 ${isClassifiedCreate ? "py-10" : "py-12"} sm:px-6`}>
+        {!isClassifiedCreate ? (
+          <div className="mb-8 flex items-center gap-3">
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/">
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+            </Button>
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">{formConfig.title}</h1>
+              <p className="text-sm text-muted-foreground">{formConfig.description}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-6 flex items-center gap-3">
+            <Button variant="ghost" size="icon" asChild className="text-[#1A2B6D] hover:bg-[#1A2B6D]/10">
+              <Link href="/">
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+            </Button>
+            <p className="text-sm text-slate-600">Autosaves locally in your browser until you publish.</p>
+          </div>
+        )}
+
+        <div
+          className={
+            isClassifiedCreate
+              ? "rounded-[1.35rem] border border-[#1A2B6D]/10 bg-white p-8 shadow-[0_24px_60px_rgba(26,43,109,0.08)] sm:p-9"
+              : "rounded-3xl border border-border bg-card p-8 shadow-sm"
+          }
+        >
           <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">{taskConfig.label}</Badge>
-            <Badge variant="outline">Local-only</Badge>
+            <Badge
+              className={
+                isClassifiedCreate
+                  ? "border-[#1A2B6D]/15 bg-[#1A2B6D]/10 text-[#1A2B6D]"
+                  : ""
+              }
+              variant="secondary"
+            >
+              {taskConfig.label}
+            </Badge>
+            <Badge variant="outline" className={isClassifiedCreate ? "border-[#1A2B6D]/20 text-[#0f1a45]" : ""}>
+              Local-only
+            </Badge>
           </div>
 
           <div className="mt-6 grid gap-6">
@@ -304,13 +351,21 @@ export default function CreateTaskPage() {
                     placeholder={field.placeholder}
                     value={values[field.key] || ""}
                     onChange={(event) => updateValue(field.key, event.target.value)}
-                    className="border-2 border-slate-200 bg-white focus-visible:ring-2 focus-visible:ring-primary/30"
+                    className={
+                      isClassifiedCreate
+                        ? "border border-[#1A2B6D]/15 bg-[#f6f8fc] focus-visible:ring-2 focus-visible:ring-[#F06529]/35"
+                        : "border-2 border-slate-200 bg-white focus-visible:ring-2 focus-visible:ring-primary/30"
+                    }
                   />
                 ) : field.type === "category" ? (
                   <select
                     value={values[field.key] || ""}
                     onChange={(event) => updateValue(field.key, event.target.value)}
-                    className="h-11 rounded-lg border-2 border-slate-200 bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                    className={
+                      isClassifiedCreate
+                        ? "h-11 rounded-xl border border-[#1A2B6D]/15 bg-[#f6f8fc] px-3 text-sm text-[#0f1a45] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F06529]/35"
+                        : "h-11 rounded-lg border-2 border-slate-200 bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                    }
                   >
                     <option value="">Select category</option>
                     {CATEGORY_OPTIONS.map((option) => (
@@ -368,7 +423,11 @@ export default function CreateTaskPage() {
                     }
                     value={values[field.key] || ""}
                     onChange={(event) => updateValue(field.key, event.target.value)}
-                    className="h-11 border-2 border-slate-200 bg-white focus-visible:ring-2 focus-visible:ring-primary/30"
+                    className={
+                      isClassifiedCreate
+                        ? "h-11 border border-[#1A2B6D]/15 bg-[#f6f8fc] focus-visible:ring-2 focus-visible:ring-[#F06529]/35"
+                        : "h-11 border-2 border-slate-200 bg-white focus-visible:ring-2 focus-visible:ring-primary/30"
+                    }
                   />
                 )}
               </div>
@@ -376,7 +435,14 @@ export default function CreateTaskPage() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button onClick={handleSubmit}>
+            <Button
+              onClick={handleSubmit}
+              className={
+                isClassifiedCreate
+                  ? "bg-[#F06529] font-semibold text-white hover:bg-[#e55a24]"
+                  : ""
+              }
+            >
               <Save className="mr-2 h-4 w-4" />
               Save locally
             </Button>
@@ -389,6 +455,7 @@ export default function CreateTaskPage() {
           </div>
         </div>
       </main>
+      {isClassifiedCreate ? <Footer /> : null}
     </div>
   );
 }
