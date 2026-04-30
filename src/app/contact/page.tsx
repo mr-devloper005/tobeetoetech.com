@@ -53,9 +53,12 @@ export default function ContactPage() {
     return <ContactPageOverride />
   }
 
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || 'support@tobeetoetech.com'
+  const emailHref = `mailto:${contactEmail}`
   const { recipe } = getFactoryState()
   const productKind = getProductKind(recipe)
   const tone = getTone(productKind)
+  const heroEmailAction = tone.action.replace('w-full', 'w-fit')
   const lanes =
     productKind === 'directory'
       ? [
@@ -118,6 +121,10 @@ export default function ContactPage() {
                 ? 'We read every note. Drop links to ads, screenshots, or city names so we can respond with the right next step—not a canned macro.'
                 : 'Tell us what you are trying to publish, fix, or launch. We route it through the right lane instead of forcing every request into the same support bucket.'}
             </p>
+            <a href={emailHref} className={`mt-8 gap-2 ${heroEmailAction}`}>
+              <Mail className="h-4 w-4" />
+              Email us
+            </a>
           </div>
         </section>
 
@@ -136,6 +143,17 @@ export default function ContactPage() {
             <div className={`p-7 sm:p-8 ${tone.panel}`}>
               <h2 className="font-sans text-2xl font-bold tracking-tight">Send a message</h2>
               <p className={`mt-2 text-sm ${tone.muted}`}>We typically reply within one business day.</p>
+              <a
+                href={emailHref}
+                className={`mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold ${
+                  isDirectory
+                    ? 'border-[#1A2B6D]/12 bg-[#f6f8fc] text-[#0f1a45] hover:border-[#F06529]/40'
+                    : 'border-current/15 hover:bg-current/5'
+                }`}
+              >
+                <Mail className="h-4 w-4" />
+                {contactEmail}
+              </a>
               <form className="mt-6 grid gap-4">
                 <input
                   className={
@@ -170,9 +188,9 @@ export default function ContactPage() {
                   }
                   placeholder="Share context, links, and the best window to reach you."
                 />
-                <button type="button" className={tone.action}>
-                  Send message
-                </button>
+                <a href={emailHref} className={tone.action}>
+                  Send email
+                </a>
               </form>
               {isDirectory ? (
                 <p className="mt-5 text-center text-xs text-slate-500">
