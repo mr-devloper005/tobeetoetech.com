@@ -334,9 +334,6 @@ export default function CreateTaskPage() {
             >
               {taskConfig.label}
             </Badge>
-            <Badge variant="outline" className={isClassifiedCreate ? "border-[#1A2B6D]/20 text-[#0f1a45]" : ""}>
-              Local-only
-            </Badge>
           </div>
 
           <div className="mt-6 grid gap-6">
@@ -444,7 +441,7 @@ export default function CreateTaskPage() {
               }
             >
               <Save className="mr-2 h-4 w-4" />
-              Save locally
+                Save
             </Button>
             <Button variant="ghost" asChild>
               <Link href={taskConfig.route}>

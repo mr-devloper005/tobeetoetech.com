@@ -1,7 +1,7 @@
 export const siteIdentity = {
   code: process.env.NEXT_PUBLIC_SITE_CODE || '9kypu30ehk',
   name: process.env.NEXT_PUBLIC_SITE_NAME || 'Tobeetoetech',
-  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Classified platform',
+  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || '',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'A classified site for Tobeetoetech, built for clean discovery and structured publishing.',

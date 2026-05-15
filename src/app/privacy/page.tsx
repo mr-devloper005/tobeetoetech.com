@@ -54,7 +54,7 @@ export default function PrivacyPage() {
           <div className="rounded-2xl border border-[#1A2B6D]/10 bg-white p-5 text-sm text-slate-600">
             <p className="font-semibold text-[#0f1a45]">Contact</p>
             <p className="mt-2">
-              Privacy requests: <span className="text-[#F06529]">privacy@example.com</span> (replace with your production inbox).
+              Privacy requests: please use our <a href="/contact" className="text-[#F06529]">Contact Us page</a>.
             </p>
           </div>
         </CardContent>
