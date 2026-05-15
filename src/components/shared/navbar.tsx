@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, Plus, Home, LifeBuoy } from 'lucide-react'
+import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, Home, LifeBuoy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/auth-context'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
@@ -122,7 +122,6 @@ export function Navbar() {
             <div className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1">
               {navLink('/', 'Home', Home)}
               {navLink('/classifieds', 'Categories', LayoutGrid)}
-              {navLink('/create/classified', 'Post an Ad', Plus)}
               {navLink('/help', 'Support', LifeBuoy)}
             </div>
           </div>
@@ -173,7 +172,6 @@ export function Navbar() {
               {[
                 { name: 'Home', href: '/', icon: Home },
                 { name: 'Categories', href: '/classifieds', icon: LayoutGrid },
-                { name: 'Post an Ad', href: '/create/classified', icon: Plus },
                 { name: 'Support', href: '/help', icon: LifeBuoy },
               ].map((item) => {
                 const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))

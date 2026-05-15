@@ -47,7 +47,7 @@ export function ContactLeadForm() {
         </label>
         <label className="grid gap-2 text-sm font-semibold text-stone-700">
           Email address
-          <input name="email" type="email" required placeholder="you@example.com" className="h-12 rounded-2xl border border-stone-200 bg-stone-50 px-4 text-base font-medium text-stone-950 outline-none transition focus:border-stone-900 focus:bg-white" />
+            <input name="email" type="email" required placeholder="Enter your email" className="h-12 rounded-2xl border border-stone-200 bg-stone-50 px-4 text-base font-medium text-stone-950 outline-none transition focus:border-stone-900 focus:bg-white" />
         </label>
       </div>
 

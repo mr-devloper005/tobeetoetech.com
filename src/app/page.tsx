@@ -165,13 +165,7 @@ function DirectoryHome({ primaryTask, enabledTasks: _enabledTasks, listingPosts,
                   Browse categories
                 </Link>
               </div>
-            </div>
-            <Link
-              href="/create/classified"
-              className="hidden items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-6 py-5 text-center text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/15 lg:inline-flex"
-            >
-              Post a free ad in minutes — photos, price, and location.
-            </Link>
+            </div>
           </div>
 
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -298,7 +292,7 @@ function DirectoryHome({ primaryTask, enabledTasks: _enabledTasks, listingPosts,
                 blurb: 'Great for quick sales and one-off items.',
                 features: ['7-day live window', 'Up to 2 photos', 'Standard placement'],
                 cta: 'Start free',
-                href: '/create/classified',
+                href: '/login',
                 highlight: false,
               },
               {
@@ -307,7 +301,7 @@ function DirectoryHome({ primaryTask, enabledTasks: _enabledTasks, listingPosts,
                 blurb: 'More exposure for higher-intent buyers.',
                 features: ['30-day live window', 'Up to 10 photos', 'Featured tag on browse'],
                 cta: 'Go premium',
-                href: '/create/classified',
+                href: '/contact',
                 highlight: true,
               },
               {
@@ -316,7 +310,7 @@ function DirectoryHome({ primaryTask, enabledTasks: _enabledTasks, listingPosts,
                 blurb: 'For shops posting inventory at scale.',
                 features: ['Unlimited active ads', 'Verified badge', 'Priority support'],
                 cta: 'Talk to us',
-                href: '/help',
+                href: '/contact',
                 highlight: false,
               },
             ].map((plan) => (
@@ -633,3 +627,4 @@ export default async function HomePage() {
     </div>
   )
 }
+

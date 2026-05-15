@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FileText, Building2, LayoutGrid, Tag, Github, Twitter, Linkedin, Image as ImageIcon, User, ArrowRight, Sparkles } from 'lucide-react'
+import { FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, User, ArrowRight, Sparkles } from 'lucide-react'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
@@ -45,12 +45,6 @@ const footerLinks = {
   ],
 }
 
-const socialLinks = [
-  { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
-  { name: 'GitHub', href: 'https://github.com', icon: Github },
-  { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
-]
-
 export function Footer() {
   if (FOOTER_OVERRIDE_ENABLED) {
     return <FooterOverride />
@@ -74,19 +68,6 @@ export function Footer() {
                   <span className="font-sans text-lg font-bold">{SITE_CONFIG.name}</span>
                 </Link>
                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">{SITE_CONFIG.description}</p>
-                <div className="mt-6 flex gap-3">
-                  {socialLinks.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-full border border-white/15 bg-white/5 p-2.5 text-white/80 transition hover:bg-white/10 hover:text-white"
-                    >
-                      <item.icon className="h-4 w-4" />
-                    </Link>
-                  ))}
-                </div>
               </div>
               <div>
                 <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">Resources</h3>
@@ -142,19 +123,6 @@ export function Footer() {
                     </Link>
                   </li>
                 </ul>
-                <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center">
-                  <input
-                    type="email"
-                    placeholder="Email for updates"
-                    className="h-11 w-full rounded-full border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/40 outline-none ring-[#F06529]/40 focus:ring-2"
-                  />
-                  <button
-                    type="button"
-                    className="h-11 shrink-0 rounded-full bg-[#F06529] px-5 text-sm font-semibold text-white transition hover:bg-[#e55a24]"
-                  >
-                    Subscribe
-                  </button>
-                </div>
               </div>
             </div>
             <div className="mt-12 border-t border-white/10 pt-6 text-center text-sm text-white/45">
@@ -222,16 +190,6 @@ export function Footer() {
                     <li key={item.name}><Link href={item.href} className="hover:text-white">{item.name}</Link></li>
                   ))}
                 </ul>
-              </div>
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Connect</h3>
-                <div className="mt-4 flex gap-3">
-                  {socialLinks.map((item) => (
-                    <Link key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/10 bg-white/8 p-2.5 text-slate-200 hover:bg-white/12 hover:text-white">
-                      <item.icon className="h-4 w-4" />
-                    </Link>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
